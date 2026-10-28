@@ -1,0 +1,97 @@
+# ShadeWalk LA configuration. Paths are relative to the project root.
+
+data:
+  ecostress_dir: data/raw/ecostress        # folder with the downloaded ECO_L2T_LSTE *.tif files
+  canopy_tif: data/raw/nlcd/canopy.tif     # USFS/NLCD Tree Canopy Cover GeoTIFF (0-100 %)
+  # The downloaded impervious raster covers the whole CONUS (~1 GB). scripts/clip_rasters.py
+  # writes the LA-only copy that everything else reads; the full one is kept as the source.
+  impervious_tif_full: data/raw/nlcd/impervious.tif
+  impervious_tif: data/raw/nlcd/impervious_la.tif  # NLCD Impervious Surface GeoTIFF (0-100 %)
+  dataset_csv: data/processed/training.csv
+  # written by scripts.build_features from the rasters above (no extra downloads)
+  canopy_nbr_tif: data/processed/canopy_nbr.tif
+  impervious_nbr_tif: data/processed/impervious_nbr.tif
+  dist_coast_tif: data/processed/dist_coast_km.tif
+  elevation_tif: data/processed/elevation_m.tif   # mosaicked from ECOSTRESS height layers
+
+features:
+  radius_m: 100               # neighbourhood window for canopy_100m / impervious_100m
+  # Columns fed to the models. Edit to run an ablation; the model file records what it used.
+  # Chosen from reports/tables/feature_sets.csv: this 6-column set beat the full 9-column
+  # one (RF R2 0.354 vs 0.347). The three dropped columns -- canopy_pct, impervious_pct
+  # (redundant once the 100 m means are present) and dist_coast_km (no effect at all) --
+  # are kept out because leave-one-out ablation showed removing them costs nothing.
+  columns: [lat, lon, canopy_100m, impervious_100m, elevation_m, hour]
+
+reports:
+  tables_dir: reports/tables
+  figures_dir: reports/figures
+
+# Los Angeles bounding box (same box used in Earthdata Search)
+bbox:
+  min_lon: -118.63025
+  min_lat: 33.88064
+  max_lon: -117.55804
+  max_lat: 34.4018
+
+timezone: America/Los_Angeles
+
+# Daytime window (local hours, inclusive start, exclusive end).
+# Used both to filter training granules and to decide whether to recommend.
+daytime:
+  start_hour: 8
+  end_hour: 19
+
+preprocess:
+  samples_per_granule: 4000   # random valid pixels kept per granule (full tiles are ~2.4M px)
+  min_valid_pixels: 200       # skip granules that are almost fully cloudy/out of the box
+  keep_qc_values: [0, 1]      # QC bits 0-1: 0 = best, 1 = nominal (check the ECOSTRESS user guide)
+  lst_valid_range_c: [-10, 75]
+  random_seed: 461
+  max_lst_err_k: 2.0          # drop pixels whose LST_err uncertainty exceeds this (K)
+  min_valid_fraction: 0.30    # drop a granule if fewer than this share of LA-box pixels survive
+  robust_z: 4.0               # drop pixels more than this many MAD-sigmas from the scene median
+
+model:
+  path: models/rf_lst.joblib
+  metrics_path: models/metrics.json
+  target: dlst                # "lst" = absolute degC, "dlst" = within-scene anomaly
+  eval_split: spatial_temporal  # random | spatial | temporal | spatial_temporal
+  n_folds: 3
+  # from reports/tables/model_size.csv: depth 20 / 100 trees was both the smallest file
+  # and the best held-out R2, so the size cap costs nothing here
+  n_estimators: 100
+  min_samples_leaf: 50
+  max_depth: 20
+  max_features: 0.6
+  test_fraction: 0.2
+  block_size_deg: 0.05        # ~5 km blocks for the spatial train/test split
+  # used only by scripts.experiments, which runs on a subsample
+  grid_n_estimators: 150
+  grid_rows: 60000
+  dt_max_depth: 12
+  hgb_learning_rate: 0.1
+  hgb_max_depth: 8
+  hgb_max_iter: 300
+
+routing:
+  profile: foot-walking
+  base_url: https://api.openrouteservice.org
+  alternatives: 3             # ORS alternative_routes.target_count
+  weight_factor: 1.4
+  share_factor: 0.6
+  via_offsets: [0.2, -0.2, 0.35, -0.35]  # extra candidates through side points (fraction of trip length); [] to disable
+  sample_spacing_m: 50
+  timeout_s: 20
+
+# freeroute.org: a second directions provider with an independent daily quota, used as a
+# fallback when the ORS quota (above) is exhausted. Its API happens to accept the same
+# request/response shape as ORS; only the base URL and auth header differ (see
+# shadewalk.routing.FreeRouteClient).
+freeroute:
+  base_url: https://api.maps.freeroute.org
+
+scoring:
+  weights: {heat: 0.4, no_shade: 0.3, distance: 0.3}
+  max_detour: 1.3             # candidate length must be <= 1.3 x shortest
+  min_cooling_c: 1.0          # leave the shortest route only if mean LST drops by at least this

@@ -1,0 +1,14 @@
+stage,count,criterion
+granules downloaded,131,
+granules in daytime window,107,8-19 h local
+granules after valid-fraction filter,62,>= 0.3 of LA-box pixels valid
+granules used,62,>= 200 sampled pixels
+pixels inside LA box,37054611,before any masking
+after LST range check,23367415,-10 to 75 C
+after cloud mask,23367415,cloud == 0
+after water mask,22577664,water == 0
+after QC mask,22577664,QC bits 0-1 in 0/1
+after LST_err cut,20119183,<= 2.0 K
+after robust MAD cut,20024828,4.0 x MAD
+rows sampled,248000,<= 4000 per granule
+rows after land-cover join,243468,canopy + impervious present

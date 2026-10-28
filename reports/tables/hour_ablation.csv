@@ -1,0 +1,13 @@
+hour_included,split,model,n_folds,rmse_c_mean,rmse_c_std,mae_c_mean,mae_c_std,r2_mean,r2_std
+True,spatial,Linear,3,3.6505,0.1383,2.7066,0.0962,0.3137,0.0357
+True,spatial,RandomForest,3,3.2013,0.1321,2.3356,0.0981,0.472,0.0327
+True,temporal,Linear,3,3.676,0.2802,2.7238,0.1797,0.3047,0.0445
+True,temporal,RandomForest,3,3.5108,0.2781,2.5578,0.186,0.3657,0.0463
+True,spatial_temporal,Linear,3,3.7067,0.0835,2.752,0.0339,0.2997,0.0239
+True,spatial_temporal,RandomForest,3,3.5621,0.1892,2.6064,0.0459,0.3536,0.0438
+False,spatial,Linear,3,3.6502,0.138,2.7071,0.0968,0.3138,0.0357
+False,spatial,RandomForest,3,3.5261,0.1124,2.6108,0.0876,0.3598,0.0246
+False,temporal,Linear,3,3.6752,0.2802,2.723,0.1793,0.305,0.0446
+False,temporal,RandomForest,3,3.5825,0.2952,2.6431,0.1823,0.3397,0.0509
+False,spatial_temporal,Linear,3,3.7044,0.0793,2.7508,0.035,0.3005,0.0232
+False,spatial_temporal,RandomForest,3,3.6519,0.1078,2.7114,0.0467,0.3199,0.0357

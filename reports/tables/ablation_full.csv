@@ -1,0 +1,21 @@
+model,dropped,r2_mean,r2_std,delta_vs_full
+Linear,(none: all features),0.3005,0.027,0.0
+Linear,lat,0.2899,0.0357,-0.0105
+Linear,lon,0.3018,0.0276,0.0014
+Linear,canopy_pct,0.3004,0.0269,-0.0001
+Linear,impervious_pct,0.3005,0.0271,0.0
+Linear,canopy_100m,0.2555,0.0194,-0.045
+Linear,impervious_100m,0.2955,0.0274,-0.005
+Linear,elevation_m,0.2991,0.0445,-0.0013
+Linear,dist_coast_km,0.2997,0.0239,-0.0008
+Linear,hour,0.3013,0.0264,0.0008
+RandomForest,(none: all features),0.3473,0.0414,0.0
+RandomForest,lat,0.334,0.0399,-0.0132
+RandomForest,lon,0.3464,0.0421,-0.0009
+RandomForest,canopy_pct,0.3494,0.0408,0.0022
+RandomForest,impervious_pct,0.348,0.0404,0.0007
+RandomForest,canopy_100m,0.3073,0.0291,-0.04
+RandomForest,impervious_100m,0.3453,0.0406,-0.002
+RandomForest,elevation_m,0.3373,0.043,-0.01
+RandomForest,dist_coast_km,0.349,0.0422,0.0017
+RandomForest,hour,0.3173,0.0364,-0.03

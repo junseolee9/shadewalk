@@ -1,0 +1,7 @@
+model,outer_fold,chosen_params,rmse_c,mae_c,r2
+RandomForest,0,"{'max_depth': 10, 'min_samples_leaf': 50}",3.8332752573212625,2.6644743863796974,0.2914824634404928
+RandomForest,1,"{'max_depth': 20, 'min_samples_leaf': 50}",3.4297637815342426,2.6082265686018054,0.3541101551398116
+RandomForest,2,"{'max_depth': None, 'min_samples_leaf': 5}",3.5389683073802565,2.5952698911034617,0.37369900746150775
+HistGradientBoosting,0,"{'learning_rate': 0.05, 'max_depth': 4}",3.796927406930507,2.743016767281494,0.3048553572890339
+HistGradientBoosting,1,"{'learning_rate': 0.05, 'max_depth': 4}",3.4893894005294395,2.60975606605086,0.3314576685118288
+HistGradientBoosting,2,"{'learning_rate': 0.05, 'max_depth': 8}",3.7087521588113077,2.7250647116746047,0.3121632474138222

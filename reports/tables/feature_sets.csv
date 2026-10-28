@@ -1,0 +1,6 @@
+feature_set,n,linear_r2,linear_std,rf_r2,rf_std,features
+full (9),9,0.3,0.027,0.347,0.041,lat lon canopy_pct impervious_pct canopy_100m impervious_100m elevation_m dist_coast_km hour
+lean+elev (6),6,0.3,0.024,0.354,0.044,lat lon canopy_100m impervious_100m elevation_m hour
+lean (5),5,0.294,0.045,0.336,0.043,lat lon canopy_100m impervious_100m hour
+no-coords (4),4,0.256,0.048,0.314,0.049,canopy_100m impervious_100m elevation_m hour
+canopy-only (1),1,0.236,0.045,0.231,0.042,canopy_100m
